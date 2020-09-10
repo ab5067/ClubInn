@@ -1,0 +1,196 @@
+
+const express = require('express');
+const router = express.Router();
+const mongoose = require('mongoose');
+const multer = require('multer');
+const reverseGeoCoding = require('../middleware/geocoding');
+
+const storage = multer.diskStorage({
+    destination: function(req, file, cb) {
+        cb(null, './uploads');
+    },
+    filename: function(req, file, cb) {
+        cb(null, new Date().toISOString() + file.originalname);
+    }
+});
+
+const fileFilter = (req, file, cb) => {
+    if(file.mimetype === 'image/jpeg' || file.mimetype === 'image/png') {
+        cb(null, true);
+    } else {
+        cb(null, false);
+    }
+}
+
+const upload = multer({
+    storage: storage, 
+    limits: {
+    fileSize: 1024 * 1024 * 10
+    },
+    fileFilter: fileFilter
+});
+
+const Place = require('../models/places');
+const User = require('../models/user');
+const Orders = require('../models/order');
+
+router.post('/availability', (req, res, next) => {
+    data = JSON.parse(req.body);
+    var bookingDate = data.booking_date;
+    const placeID = data.placeID;
+    var date = new Date(bookingDate);
+
+    var query = {$and: [{booking_date: date},{'cart.items.id': placeID}]};
+
+    Orders.find(query)
+    .exec()
+    .then(doc =>{
+        console.log(doc)
+        if(doc.length) {
+            res.status(409).json({
+                message: 'Place alreay booked for the given date'
+            }); 
+        } else {
+            res.status(200).json({
+                message: 'Place available'
+            });
+        }
+    })
+    .catch(err => {
+        console.log(err);
+        res.status(500).json({
+            error: err
+        });
+    }); 
+});
+
+router.get('/', (req, res, next) => {
+    Place.find()
+    .exec()
+    .then(docs => {
+        const response = {
+            count: docs.length,
+            places: docs
+        };
+        res.status(200).json(response)
+    })
+    .catch(err => {
+        console.log(err);
+        res.status(500).json({
+            error: err
+        });
+    }); 
+});
+
+router.post('/', upload.array('placeImage', 5), reverseGeoCoding, (req, res, next) => {
+var placeImagesPath = [];
+
+const parsedData = req.body;
+//console.log(req.body);
+
+for(const image in req.files) {
+    console.log(req.files[image].path)
+    placeImagesPath.push(req.files[image].path)
+}
+
+    const place = new Place ({
+        _id: new mongoose.Types.ObjectId,
+        name: parsedData.name,
+        owner: parsedData.owner,
+
+        location: parsedData.location,
+        stringAddress: req.formatted_address,
+
+        price: parsedData.price,
+        paxCapacity: parsedData.paxCapacity,
+        placeImage: placeImagesPath,
+        productType: parsedData.productType,
+        description: parsedData.description,
+
+        amenities: parsedData.amenities
+    });
+    place
+    .save()
+    .then(result => {
+        console.log(result);
+        res.status(201).json({
+            message: "Place Posted Sucessfully"
+        });
+    })
+    .catch(err => {
+        console.log(err);
+        res.status(500).json({
+            error: err
+        });
+    });
+});
+
+router.get('/user/:userId', (req, res, next) => {
+    const ID = req.params.userId
+    Place.find({user: ID})
+    .select('_id name location price')
+    .exec()
+    .then(docs => {
+        console.log(docs);
+        res.status(200).json(docs);
+    })
+    .catch(err => {
+        console.log(err);
+        res.status(500).json({
+            error: err
+        });
+    });
+});
+
+router.get('/', (req, res, next) => {
+Place.find()
+    .exec()
+    .then(docs => {
+        const response = {
+            count: docs.length,
+            places: docs
+        }
+        res.status(200).json(response)
+    }) 
+    .catch(err => {
+        console.log(err);
+        res.status(500).json({error: err});
+    });
+});
+
+router.patch('/:placesId', (req, res, next) => { 
+const id = req.params.placesId;
+const updateOps = req.body; 
+for(const key of Object.keys(updateOps)) {
+    console.log(key, updateOps[key]);
+}
+Place.update({_id: id}, { $set: updateOps })
+    .exec()
+    .then(result => {
+        console.log(result);
+        res.status(200).json(result);
+    })
+    .catch(err => {
+        console.log(err);
+        res.status(500).json({
+            error: err
+        });
+    });
+});
+
+router.delete('/:placesId', (req, res, next) => {
+const id = req.params.placesId;
+Place.remove({_id: id})
+    .exec()
+    .then(result => {
+        res.status(200).json(result);
+    })
+    .catch(err => {
+        console.log(err);
+        res.status(500).json({
+            error: err
+        });
+    }); 
+});
+
+module.exports = router;
