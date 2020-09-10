@@ -1,0 +1,10 @@
+{
+    "env": {
+        "MONGO_ATLAS_PW": "aA9830179097",
+        "JWT_KEY": "secret",
+        "serviceID": "VA27cd641ff56b078f07ac8ab0b108941e",
+        "accountSID": "ACa70d94430c63124c4001a628afac742f",
+        "authToken": "68a2843cad06c9690335ef32c2845df2",
+        "GOOGLE_MAPS_API_KEY": "AIzaSyBFRYUS7brPnKscuDnK310Lx0jwrW-x9Us"
+    }
+}
