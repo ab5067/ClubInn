@@ -6,11 +6,12 @@ const router = express.Router();
 
 const bcrypt = require('bcrypt');
 const jwt =  require('jsonwebtoken');
-const client = require('twilio')(process.env.accountSID, process.env.authToken)
+const client = require('twilio')(process.env.accountSID, process.env.authToken);
+const geocoding = require('../middleware/geocoding');
 
 const User = require('../models/user');
 
-router.post('/signup', (req, res, next) => {
+router.post('/signup', geocoding, (req, res, next) => {
     const data = JSON.parse(req.body);
     var date = data.birthday;
     var birthday = new Date(date);
@@ -40,6 +41,7 @@ router.post('/signup', (req, res, next) => {
                             type: data.location.type,
                             coordinates: data.location.coordinates
                         },
+                        string_address: req.formatted_address,
                         phone_number: data.phone_number
                     });
                     user
