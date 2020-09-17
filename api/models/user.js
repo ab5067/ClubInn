@@ -30,7 +30,8 @@ const userSchema = mongoose.Schema({
           index: '2dsphere'
         }
       },
-
+    
+    string_address: {type: String},
     phone_number: {type: Number, required: true}
 
 });
