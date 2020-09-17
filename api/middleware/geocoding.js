@@ -11,8 +11,7 @@ module.exports = (req, res, next) => {
     fetch(url) 
     .then(response => response.json())
     .then(data => {
-        console.log(data);
-        req.formatted_address = data.results[0].formatted_address
+        req.formatted_address = data.results[1].formatted_address
         next();
     })
     .catch(err => console.log(err.message));
