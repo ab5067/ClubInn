@@ -178,11 +178,13 @@ router.post('/verify', (req, res, next) => {
     });
 });
 
-router.patch('/:userId', (req, res, next) => { 
+router.patch('/:userId', geocoding, (req, res, next) => { 
     const id = req.params.userId;
     const updateOps = JSON.parse(req.body); 
     for(const key of Object.keys(updateOps)) {
-        console.log(key, updateOps[key]);
+        if(key === 'location') {
+            updateOps['string_address'] = req.formatted_address;
+        }
     }
 
     if(updateOps.password) {
