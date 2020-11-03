@@ -8,6 +8,7 @@ const orderSchema = mongoose.Schema({
     user: {type: String, ref: 'User', required: true}, 
 
     cart: {type: Object, required: true},
+    order_placement_date: {type: String, required: true},
 
     booking_date: {type: String, required: true},
 

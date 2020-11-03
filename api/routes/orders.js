@@ -19,8 +19,16 @@ router.get('/', (req, res, next) => {
 router.post('/', geocoding, checkAuth,  (req, res, next) => {
   data = JSON.parse(req.body);
   var bookingDate = data.booking_date;
+  var currentdate = new Date(); 
+  var placementDate = (currentdate.getMonth() + 1) + "/"
+                      + currentdate.getDate()  + "/" 
+                      + currentdate.getFullYear() + " @ "  
+                      + currentdate.getHours() + ":"  
+                      + currentdate.getMinutes() + ":" 
+                      + currentdate.getSeconds();
 
-  console.log(data.booking_date);
+  console.log(placementDate);
+  var parsedDate = new Date(placementDate);
   var date = new Date(bookingDate);
   var token = req.headers.authorization.split(" ")[1];
   const cart_data = jwt.decode(token);
@@ -37,6 +45,7 @@ router.post('/', geocoding, checkAuth,  (req, res, next) => {
     string_address: req.formatted_address,
 
     booking_date: date,
+    order_placement_date: parsedDate,
     order_status: data.order_status,
 
     payment_id: data.payment_id,
