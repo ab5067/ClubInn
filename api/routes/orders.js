@@ -31,6 +31,8 @@ router.post('/', geocoding, checkAuth,  (req, res, next) => {
 
     cart: cart_data,
     decoration: data.decoration,
+    liquor: data.liquor,
+    catering: data.catering,
     location: data.location,
     string_address: req.formatted_address,
 

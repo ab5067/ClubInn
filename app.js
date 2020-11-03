@@ -19,6 +19,7 @@ mongoose.Promise = global.Promise;
 
 app.use(morgan('dev'));
 app.use('/uploads', express.static('uploads'));
+app.use('/food_images', express.static('food_images'));
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.text()); //change to bodyparser.text() when using app and .json() when using postman
 

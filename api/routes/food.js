@@ -5,14 +5,16 @@ const mongoose = require('mongoose');
 const Food = require('../models/food');
 
 router.post('/', (req, res, next) => {
+    const data = JSON.parse(req.body);
     const food = new Food ({
         _id: new mongoose.Types.ObjectId, 
 
-        name: req.body.name, 
-        price: req.body.price,
-        description: req.body.description, 
-        warehouse_quantity: req.body.warehouse_quantity,
-        productType: req.body.productType,
+        name: data.name, 
+        price: data.price,
+        description: data.description, 
+        warehouse_quantity: data.warehouse_quantity,
+        productType: data.productType,
+        foodType: data.foodType
     });
     food
     .save()
@@ -31,22 +33,43 @@ router.post('/', (req, res, next) => {
 });
 
 router.get('/', (req, res, next) => {
+
+    var foodCategories = [
+        {"Appetizer": []},
+        {"North Indian": []},
+        {"Breads & Rice": []},
+    ];
+
+    var foodImagesLinks = [
+        "food_images/UR_Image1.png",
+        "food_images/UR_Image2.png",
+        "food_images/UR_Image3.png",
+        "food_images/UR_Image4.png",
+        "food_images/UR_Image5.png",
+        "food_images/UR_Image6.png"
+    ]
+
     Food.find()
-    .select('_id name price description productType')
+    .select('_id name price description productType foodType')
     .exec()
     .then(docs => {
-        const response = {
-            count: docs.length,
-            food: docs.map(doc => {
-                return {
-                    _id: doc._id,
-                    name: doc.name,
-                    price: doc.price,
-                    description: doc.description,
-                    productType: doc.productType,
+
+        for(const food of docs) {
+            for(var [i, categoryObject] of foodCategories.entries()) {
+                var category = Object.keys(categoryObject)[0]
+                if(category === food.foodType) {
+                    foodCategories[i][category].push(food);
+                    break;
                 }
-            })
+            }
+        }
+       
+        const response = {
+            foodImagesLinks: foodImagesLinks,
+            count: docs.length,
+            food: foodCategories
         };
+        console.log(response);
         res.status(200).json(response);
     })
     .catch(err => {

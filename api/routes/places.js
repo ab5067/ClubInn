@@ -45,11 +45,16 @@ router.post('/availability', (req, res, next) => {
     Orders.find(query)
     .exec()
     .then(doc =>{
-        console.log(doc)
         if(doc.length) {
-            res.status(409).json({
-                message: 'Place alreay booked for the given date'
-            }); 
+            if(doc[0].order_status == 'Cancelled') {
+                res.status(200).json({
+                    message: 'Place available'
+                });
+            } else {
+                res.status(409).json({
+                    message: 'Place alreay booked for the given date'
+                }); 
+            }
         } else {
             res.status(200).json({
                 message: 'Place available'
@@ -64,29 +69,10 @@ router.post('/availability', (req, res, next) => {
     }); 
 });
 
-router.get('/', (req, res, next) => {
-    Place.find()
-    .exec()
-    .then(docs => {
-        const response = {
-            count: docs.length,
-            places: docs
-        };
-        res.status(200).json(response)
-    })
-    .catch(err => {
-        console.log(err);
-        res.status(500).json({
-            error: err
-        });
-    }); 
-});
-
-router.post('/', upload.array('placeImage', 5), reverseGeoCoding, (req, res, next) => {
+router.post('/', upload.array('placeImage', 8), reverseGeoCoding, (req, res, next) => {
 var placeImagesPath = [];
 
 const parsedData = req.body;
-//console.log(req.body);
 
 for(const image in req.files) {
     console.log(req.files[image].path)
@@ -95,6 +81,7 @@ for(const image in req.files) {
 
     const place = new Place ({
         _id: new mongoose.Types.ObjectId,
+        listing: parsedData.listing,
         name: parsedData.name,
         owner: parsedData.owner,
 
@@ -106,6 +93,7 @@ for(const image in req.files) {
         placeImage: placeImagesPath,
         productType: parsedData.productType,
         description: parsedData.description,
+        placeType: parsedData.placeType,
 
         amenities: parsedData.amenities
     });
@@ -142,8 +130,29 @@ router.get('/user/:userId', (req, res, next) => {
     });
 });
 
+router.get('/property-filter/:placeType', (req, res, next) => {
+    console.log(req.params.placeType);
+    
+    Place
+    .find({placeType: {$in: [req.params.placeType, 'Hybrid']}})
+    .exec()
+    .then(docs => {
+        const response = {
+            count: docs.length,
+            placesTypes: placeTypes,
+            places: docs
+        }
+        res.status(200).json(response)
+    }) 
+    .catch(err => {
+        console.log(err);
+        res.status(500).json({error: err});
+    });
+});
+
 router.get('/', (req, res, next) => {
-Place.find()
+    
+Place.find({listing: true})
     .exec()
     .then(docs => {
         const response = {

@@ -11,7 +11,9 @@ const orderSchema = mongoose.Schema({
 
     booking_date: {type: String, required: true},
 
-    decoration: {type: String}, 
+    decoration: {type: Boolean, default: false}, 
+    liquor: {type: Boolean, default: false},
+    catering: {type: Boolean, default: false},
 
     location: {
         type: {

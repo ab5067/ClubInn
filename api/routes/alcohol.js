@@ -14,6 +14,7 @@ router.post('/', (req, res, next) => {
         volume: req.body.volume,
         warehouse_quantity: req.body.warehouse_quantity,
         productType: req.body.productType,
+        alcoholType: doc.alcoholType
     });
     alcohol
     .save()
@@ -33,7 +34,7 @@ router.post('/', (req, res, next) => {
 
 router.get('/', (req, res, next) => {
     Alcohol.find()
-    .select('_id name price description volume productType')
+    .select('_id name price description volume productType alcoholType')
     .exec()
     .then(docs => {
         //print(docs)
@@ -47,6 +48,7 @@ router.get('/', (req, res, next) => {
                     volume: doc.volume,
                     description: doc.description,
                     productType: doc.productType,
+                    alcoholType: doc.alcoholType
                 }
             })
         };

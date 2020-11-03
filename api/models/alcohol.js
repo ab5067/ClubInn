@@ -8,6 +8,7 @@ const alcoholSchema = mongoose.Schema({
     description: {type: String},
     productType: {type: String, default: 'alcohol', required: true},
     volume: {type: Number, required: true},
+    alcoholType: {type: String, required: true},
     warehouse_quantity: {type: Number, min: 0},
 });
 

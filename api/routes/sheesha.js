@@ -5,14 +5,15 @@ const mongoose = require('mongoose');
 const Sheesha = require('../models/sheesha');
 
 router.post('/', (req, res, next) => {
+    const data = JSON.parse(req.body);
     const sheesha = new Sheesha ({
         _id: new mongoose.Types.ObjectId, 
 
-        name: req.body.name, 
-        price: req.body.price,
-        description: req.body.description, 
-        warehouse_quantity: req.body.warehouse_quantity,
-        productType: req.body.productType,
+        name: data.name, 
+        price: data.price,
+        description: data.description, 
+        warehouse_quantity: data.warehouse_quantity,
+        productType: data.productType,
     });
     sheesha
     .save()

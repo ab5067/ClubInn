@@ -65,7 +65,7 @@ router.post('/signup', geocoding, (req, res, next) => {
 });
 
 router.post('/login', (req, res, next) => {
-    const data = JSON.parse(req.body) //add JSON.parse(req.body) when using app 
+    const data = JSON.parse(req.body);//add JSON.parse(req.body) when using app 
     User.find({email: data.email})
     .exec()
     .then(user => {
@@ -83,6 +83,7 @@ router.post('/login', (req, res, next) => {
           if(result) {
               const token = jwt.sign({
                     user : {
+                        name: user[0].name,
                         email: user[0].email,
                         id: user[0]._id
                         },

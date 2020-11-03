@@ -1,0 +1,29 @@
+config:
+  target: 'http://localhost:3000'
+  phases:
+    - duration: 120
+      arrivalRate: 20
+      rampTo: 50
+      name: "Warm Up the application"
+    - duration: 600
+      arrivalRate: 50
+      name: "Sustained Max Load"
+  payload:
+    path: "load-testing.csv"
+    fields:
+      - "email"
+      - "password"
+scenarios:
+  - flow:
+    - get:
+        url: "/places"
+    - think: 5
+    - get:
+        url: "/food"
+    - think: 5
+    - get:
+        url: "/sheesha"
+    - think: 5
+    - get:
+        url: "/alcohol"
+    - think: 5

@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 
 const placesSchema = mongoose.Schema({
     _id: String,
+    listing: {type: Boolean, default: true},
 
     name: {type: String, required: true},
 
@@ -31,20 +32,15 @@ const placesSchema = mongoose.Schema({
     stringAddress: {type: String, required:true},
       
     productType: {type: String, default: 'place', required: true},
-    price: {type: Number, required: true},
+    price: {type: Object, required: true},
     paxCapacity: {type: Number, required: true},
 
     description: {type: String, required: true},
     placeImage: {type: [String], required: true},
 
-    amenities: {
-      Food: {type: Boolean, default: false},
-      Alcohol: {type: Boolean, default: false}, 
-      Sheesha: {type: Boolean, default: false},
-      Music: {type: Boolean, default: false},
-      AirConditioning: {type: Boolean, default: false},
-      WiFi: {type: Boolean, default: false}
-    }
+    placeType: {type: String, required: true},
+
+    amenities: {type: Object, required: true}
 });
 
 module.exports = mongoose.model('Place', placesSchema);

@@ -16,6 +16,7 @@ var cart = new Cart({});
 
 router.get('/add-place-to-cart/:placeId', checkAuth, (req, res, next) => {
     const Id = req.params.placeId;
+    var price = req.query.price;
     var token = req.headers.authorization.split(" ")[1]; 
 
     Place.findById(Id, function(err, place) {
@@ -23,6 +24,7 @@ router.get('/add-place-to-cart/:placeId', checkAuth, (req, res, next) => {
         console.log(err);
         res.status(500).json({error: err});
         }
+        place.price = parseInt(price);
         token = cart.add(token, place, place._id);
         res.status(200).json({
             cart: token
