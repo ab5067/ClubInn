@@ -2,7 +2,7 @@ const fetch = require("node-fetch");
 
 module.exports = (req, res, next) => {
     
-    const parsedData = JSON.parse(req.body);
+    const parsedData = req.body;
     if(parsedData.location) {
         var LAT = parsedData.location.coordinates[1];
         var LNG = parsedData.location.coordinates[0];

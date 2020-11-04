@@ -20,6 +20,7 @@ router.post('/', geocoding, checkAuth,  (req, res, next) => {
   data = JSON.parse(req.body);
   var bookingDate = data.booking_date;
   var currentdate = new Date(); 
+
   var placementDate = (currentdate.getMonth() + 1) + "/"
                       + currentdate.getDate()  + "/" 
                       + currentdate.getFullYear() + " @ "  
@@ -27,7 +28,7 @@ router.post('/', geocoding, checkAuth,  (req, res, next) => {
                       + currentdate.getMinutes() + ":" 
                       + currentdate.getSeconds();
 
-  console.log(placementDate);
+ 
   var parsedDate = new Date(placementDate);
   var date = new Date(bookingDate);
   var token = req.headers.authorization.split(" ")[1];
