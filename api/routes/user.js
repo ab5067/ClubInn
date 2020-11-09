@@ -114,7 +114,7 @@ router.post('/login', (req, res, next) => {
 
 router.get('/:userId', (req, res, next) => { 
     const ID = req.params.userId;
-    console.log(ID)
+
     User.findById(ID)
     .exec()
     .then(docs => {
@@ -126,6 +126,36 @@ router.get('/:userId', (req, res, next) => {
       res.status(500).json({
           error: err
       });
+    });
+});
+
+router.post('/support', (req, res, next) => {
+    var numbers = ['+91 90079 07083', '+91 83370 63223'];
+    var emails = ['clubinn.in@gmail.com'];
+    
+    res.status(200).json({
+        contact_number: numbers,
+        email: emails
+    });
+});
+
+router.post('/aboutus', (req, res, next) => {
+    var aboutUsMessage1 = "Founded in August of 2019 and based in Kolkata, India. ClubInn is a trusted online platform for people to list, explore, or book unique spaces around the city for events and celebrations.";
+    var aboutUsMessage2 = "Whether it is your bachelors before marriage, anniversary party after marriage, or your kid’s birthday party, ClubInn helps you arrange all events and celebrations in just a few clicks. An economic empowerment engine that allows people to monetise their extra space, world-class arrangements done in a record timing of just 1 day, a growing community of users, all of this together is pushing ClubInn to become the next biggest events chain of the world.";
+    var founders = [
+        {
+            "name": 'Arsh Bansal',
+            "position": "Co-founder"
+        },
+        {
+            "name": 'Yash Jalan',
+            "position": "Co-founder"
+        }
+    ];
+    res.status(200).json({
+        message1: aboutUsMessage1,
+        message2: aboutUsMessage2,
+        founders: founders
     });
 });
 

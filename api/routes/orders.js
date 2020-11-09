@@ -7,12 +7,6 @@ const checkAuth = require('../middleware/check-auth');
 const jwt = require('jsonwebtoken');
 const geocoding = require('../middleware/geocoding');
 
-const Food = require('../models/food');
-const Sheesha = require('../models/sheesha');
-const Alcohol = require('../models/alcohol');
-const Place = require('../models/places');
-const User = require('../models/user');
-
 router.get('/', (req, res, next) => {
 });
 
