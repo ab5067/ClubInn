@@ -33,6 +33,7 @@ const placesSchema = mongoose.Schema({
       
     productType: {type: String, default: 'place', required: true},
     price: {type: Object, required: true},
+    vendorPrice: {type: Number, required: true},
     paxCapacity: {type: Number, required: true},
 
     description: {type: String, required: true},

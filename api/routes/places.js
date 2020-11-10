@@ -89,6 +89,7 @@ for(const image in req.files) {
         stringAddress: req.formatted_address,
 
         price: parsedData.price,
+        vendorPrice: parsedData.vendorPrice,
         paxCapacity: parsedData.paxCapacity,
         placeImage: placeImagesPath,
         productType: parsedData.productType,

@@ -150,6 +150,10 @@ router.post('/aboutus', (req, res, next) => {
         {
             "name": 'Yash Jalan',
             "position": "Co-founder"
+        },
+        {
+            "name": 'Shivam Jalan',
+            "position": "Co-founder"
         }
     ];
     res.status(200).json({
