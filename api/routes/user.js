@@ -152,7 +152,7 @@ router.post('/aboutus', (req, res, next) => {
             "position": "Co-founder"
         },
         {
-            "name": 'Shivam Jalan',
+            "name": 'Shivam Agarwal',
             "position": "Co-founder"
         }
     ];
