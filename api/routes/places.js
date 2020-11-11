@@ -25,7 +25,7 @@ const fileFilter = (req, file, cb) => {
 const upload = multer({
     storage: storage, 
     limits: {
-    fileSize: 1024 * 1024 * 10
+    fileSize: 1024 * 1024 * 15
     },
     fileFilter: fileFilter
 });
@@ -69,7 +69,7 @@ router.post('/availability', (req, res, next) => {
     }); 
 });
 
-router.post('/', upload.array('placeImage', 8), reverseGeoCoding, (req, res, next) => {
+router.post('/', upload.array('placeImage', 15), reverseGeoCoding, (req, res, next) => {
 var placeImagesPath = [];
 
 const parsedData = req.body;
