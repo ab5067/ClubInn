@@ -30,6 +30,7 @@ const placesSchema = mongoose.Schema({
       },
     
     stringAddress: {type: String, required:true},
+    shortAddress: {type: String, required: true},
       
     productType: {type: String, default: 'place', required: true},
     price: {type: Object, required: true},

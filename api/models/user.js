@@ -4,6 +4,7 @@ const userSchema = mongoose.Schema({
     _id: String,
 
     name: {type: String, required: true}, 
+    login_timestamp: {type: [String]},
 
     email: { 
         type: String, 

@@ -10,7 +10,7 @@ const orderSchema = mongoose.Schema({
     cart: {type: Object, required: true},
     order_placement_date: {type: String, required: true},
 
-    booking_date: {type: String, required: true},
+    booking_date: {type: Date, required: true},
 
     decoration: {type: Boolean, default: false}, 
     liquor: {type: Boolean, default: false},

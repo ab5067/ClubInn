@@ -66,6 +66,15 @@ router.post('/signup', geocoding, (req, res, next) => {
 
 router.post('/login', (req, res, next) => {
     const data = JSON.parse(req.body);//add JSON.parse(req.body) when using app 
+    var currentdate = new Date(); 
+
+    var loginTimeStamp = (currentdate.getMonth() + 1) + "/"
+                        + currentdate.getDate()  + "/" 
+                        + currentdate.getFullYear() + " @ "  
+                        + currentdate.getHours() + ":"  
+                        + currentdate.getMinutes() + ":" 
+                        + currentdate.getSeconds();
+
     User.find({email: data.email})
     .exec()
     .then(user => {
@@ -74,26 +83,27 @@ router.post('/login', (req, res, next) => {
               message: 'Auth failed' 
            });
        } 
-       bcrypt.compare(data.password, user[0].password, (err, result) => {
+       bcrypt.compare(data.password, user[0].password, async (err, result) => {
           if(err) {
               res.status(401).json({
                   message: 'Auth Failed'
               });
           }
           if(result) {
-              const token = jwt.sign({
-                    user : {
-                        name: user[0].name,
-                        email: user[0].email,
-                        id: user[0]._id
+                const token = jwt.sign({
+                        user : {
+                            name: user[0].name,
+                            email: user[0].email,
+                            id: user[0]._id
+                            },
+                        items : "items"
                         },
-                    items : "items"
-                    },
-                    process.env.JWT_KEY,
-                    {    
-                        expiresIn: "1h"
-                    }
-               );
+                        process.env.JWT_KEY,
+                        {    
+                            expiresIn: "1h"
+                        }
+                );
+                await User.update({_id: user[0]._id}, {$push: {login_timestamp: loginTimeStamp}});
                 return res.status(200).json({
                     message: 'Auth successful',
                     token: token

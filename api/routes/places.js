@@ -31,16 +31,28 @@ const upload = multer({
 });
 
 const Place = require('../models/places');
-const User = require('../models/user');
 const Orders = require('../models/order');
+const Inquiry = require('../models/inquiry');
 
-router.post('/availability', (req, res, next) => {
+router.post('/availability', async (req, res, next) => {
     data = JSON.parse(req.body);
     var bookingDate = data.booking_date;
     const placeID = data.placeID;
     var date = new Date(bookingDate);
 
     var query = {$and: [{booking_date: date},{'cart.items.id': placeID}]};
+    var place = await Place.findById(placeID);
+
+    const inquiry = new Inquiry({
+        _id: new mongoose.Types.ObjectId,
+        inquiry_date: date,
+        place: {
+            id: placeID,
+            name: place.name
+        }
+    });
+
+    await inquiry.save();
 
     Orders.find(query)
     .exec()
@@ -87,6 +99,7 @@ for(const image in req.files) {
 
         location: parsedData.location,
         stringAddress: req.formatted_address,
+        shortAddress: req.short_address,
 
         price: parsedData.price,
         vendorPrice: parsedData.vendorPrice,
