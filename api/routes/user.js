@@ -103,7 +103,7 @@ router.post('/login', (req, res, next) => {
                             expiresIn: "1h"
                         }
                 );
-                await User.update({_id: user[0]._id}, {$push: {login_timestamp: loginTimeStamp}});
+                await User.updateOne({_id: user[0]._id}, {$push: {login_timestamp: loginTimeStamp}});
                 return res.status(200).json({
                     message: 'Auth successful',
                     token: token
