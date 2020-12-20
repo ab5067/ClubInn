@@ -4,6 +4,7 @@ const router = express.Router();
 const mongoose = require('mongoose');
 const multer = require('multer');
 const reverseGeoCoding = require('../middleware/geocoding');
+const checkAuth = require('../middleware/check-auth');
 
 const storage = multer.diskStorage({
     destination: function(req, file, cb) {
@@ -33,26 +34,37 @@ const upload = multer({
 const Place = require('../models/places');
 const Orders = require('../models/order');
 const Inquiry = require('../models/inquiry');
+const User = require('../models/user');
 
-router.post('/availability', async (req, res, next) => {
+router.post('/availability', checkAuth, async (req, res, next) => {
     data = JSON.parse(req.body);
     var bookingDate = data.booking_date;
     const placeID = data.placeID;
     var date = new Date(bookingDate);
+    var inquiry;
 
     var query = {$and: [{booking_date: date},{'cart.items.id': placeID}]};
     var place = await Place.findById(placeID);
 
-    const inquiry = new Inquiry({
-        _id: new mongoose.Types.ObjectId,
-        inquiry_date: date,
-        place: {
-            id: placeID,
-            name: place.name
-        }
-    });
+    console.log(req.userData);
 
-    await inquiry.save();
+    if(req.userData != undefined) {
+        var user = await User.findById(req.userData.user.id);
+        inquiry = new Inquiry({
+            _id: new mongoose.Types.ObjectId,
+            inquiry_date: date,
+            place: {
+                id: placeID,
+                name: place.name
+            },
+            user: {
+                id: user._id,
+                name: user.name,
+                email: user.email
+            }
+        });
+        await inquiry.save();
+    }
 
     Orders.find(query)
     .exec()
@@ -165,20 +177,19 @@ router.get('/property-filter/:placeType', (req, res, next) => {
 });
 
 router.get('/', (req, res, next) => {
-    
-Place.find({listing: true})
-    .exec()
-    .then(docs => {
-        const response = {
-            count: docs.length,
-            places: docs
-        }
-        res.status(200).json(response)
-    }) 
-    .catch(err => {
-        console.log(err);
-        res.status(500).json({error: err});
-    });
+    Place.find({listing: true})
+        .exec()
+        .then(docs => {
+            const response = {
+                count: docs.length,
+                places: docs
+            }
+            res.status(200).json(response)
+        }) 
+        .catch(err => {
+            console.log(err);
+            res.status(500).json({error: err});
+        });
 });
 
 router.patch('/:placesId', (req, res, next) => { 

@@ -7,6 +7,12 @@ const inquirySchema = mongoose.Schema({
     place: {
         id: {type: String, required: true},
         name: {type: String, required: true}
+    },
+
+    user: {
+        id: {type: String},
+        name: {type: String},
+        email: {type: String},
     }
 });
 
