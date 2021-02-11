@@ -69,7 +69,6 @@ router.get('/', (req, res, next) => {
             count: docs.length,
             food: foodCategories
         };
-        console.log(response);
         res.status(200).json(response);
     })
     .catch(err => {
@@ -81,22 +80,22 @@ router.get('/', (req, res, next) => {
 });
 
 router.patch('/:foodId', (req, res, next) => {
-const id = req.params.foodId;
-const updateOps = {};
-for(const ops of req.body) {
-    updateOps[ops.propName] = ops.value;
-}
-Food.update({_id: id}, { $set: updateOps })
-    .exec()
-    .then(result => {
-        console.log(result);
-        res.status(200).json(result);
-    })
-    .catch(err => {
-        console.log(err);
-        res.status(500).json({
-            error: err
-        });
+    const id = req.params.foodId;
+    const updateOps = {};
+    for(const ops of req.body) {
+        updateOps[ops.propName] = ops.value;
+    }
+    Food.update({_id: id}, { $set: updateOps })
+        .exec()
+        .then(result => {
+            console.log(result);
+            res.status(200).json(result);
+        })
+        .catch(err => {
+            console.log(err);
+            res.status(500).json({
+                error: err
+            });
     }); 
 });
 

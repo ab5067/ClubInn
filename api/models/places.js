@@ -14,6 +14,13 @@ const placesSchema = mongoose.Schema({
         required: true, 
         match: /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])/
       },
+      bankDetails: {
+        bankName: {type: String},
+        accountNumber: {type: Number},
+        IFSC: {type: String},
+        accountHolder: {type: String},
+      }, 
+      UPI: {type: String},
     },
 
     location: {

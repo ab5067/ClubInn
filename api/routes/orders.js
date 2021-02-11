@@ -6,13 +6,15 @@ const Order = require('../models/order');
 const checkAuth = require('../middleware/check-auth');
 const jwt = require('jsonwebtoken');
 const geocoding = require('../middleware/geocoding');
+const generatePayID = require('../middleware/generate-payId');
 
 router.get('/', (req, res, next) => {
 });
 
-router.post('/', geocoding, checkAuth,  (req, res, next) => {
+router.post('/', geocoding, checkAuth, async (req, res, next) => {
   data = JSON.parse(req.body);
   var bookingDate = data.booking_date;
+  var paymentID = await generatePayID();
   var currentdate = new Date(); 
 
   var placementDate = (currentdate.getMonth() + 1) + "/"
@@ -43,7 +45,7 @@ router.post('/', geocoding, checkAuth,  (req, res, next) => {
     order_placement_date: parsedDate,
     order_status: data.order_status,
 
-    payment_id: data.payment_id,
+    payment_id: paymentID
     
   });
   order

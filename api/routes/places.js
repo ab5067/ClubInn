@@ -46,9 +46,7 @@ router.post('/availability', checkAuth, async (req, res, next) => {
     var query = {$and: [{booking_date: date},{'cart.items.id': placeID}]};
     var place = await Place.findById(placeID);
 
-    console.log(req.userData);
-
-    if(req.userData != undefined) {
+/*   if(req.userData != undefined) {
         var user = await User.findById(req.userData.user.id);
         inquiry = new Inquiry({
             _id: new mongoose.Types.ObjectId,
@@ -64,7 +62,7 @@ router.post('/availability', checkAuth, async (req, res, next) => {
             }
         });
         await inquiry.save();
-    }
+    }*/
 
     Orders.find(query)
     .exec()

@@ -11,6 +11,8 @@ const geocoding = require('../middleware/geocoding');
 
 const User = require('../models/user');
 
+const Package = require('../models/packages');
+
 router.post('/signup', geocoding, (req, res, next) => {
     const data = JSON.parse(req.body);
     var date = data.birthday;
@@ -64,6 +66,41 @@ router.post('/signup', geocoding, (req, res, next) => {
     })
 });
 
+router.get('/homepage',(req, res, next) => {
+
+    const homescreenImagesLinks = ["home_images/Home1.jpeg", "home_images/Home2.jpeg", "home_images/Home3.jpeg", "home_images/Home4.jpeg", "home_images/Home5.jpeg", "home_images/Home6.jpeg"];
+
+    const reviews = [
+        {
+            "review": "Finding a place to party, sounds easy right? Trust me it isn't. Cheers to ClubInn and the amazing concept.",
+            "critic": "Khushaal Motwani",
+            "criticImageLink": "critic_images/Khushaal_Motwani.jpeg"
+        },
+        {
+            "review": "Spent such a memorable time with my friends at ClubInn! Thanks so much for an unforgettable night.",
+            "critic": "Shiksha Verma",
+            "criticImageLink": "critic_images/Shiksha_Verma.jpeg"
+        }
+    ];
+
+    Package
+    .find({listing: true})
+    .exec()
+    .then(result => {
+        res.status(200).json({
+            homescreenImagesLinks: homescreenImagesLinks,
+            packages: result,
+            reviews: reviews
+        });
+    })
+    .catch(err => {
+        console.log(err);
+        res.status(500).json({
+            error: err
+        });
+    }); 
+});
+
 router.post('/login', (req, res, next) => {
     const data = JSON.parse(req.body);//add JSON.parse(req.body) when using app 
     var currentdate = new Date(); 
@@ -96,11 +133,13 @@ router.post('/login', (req, res, next) => {
                             email: user[0].email,
                             id: user[0]._id
                             },
-                        items : "items"
+                        items : "items",
+                        total_price: 0,
+                        total_Qty : 0
                         },
                         process.env.JWT_KEY,
                         {    
-                            expiresIn: "1h"
+                            expiresIn: "24h"
                         }
                 );
                 await User.updateOne({_id: user[0]._id}, {$push: {login_timestamp: loginTimeStamp}});
@@ -153,7 +192,7 @@ router.post('/aboutus', (req, res, next) => {
     var aboutUsMessage1 = "Founded in August of 2019 and based in Kolkata, India. ClubInn is a trusted online platform for people to list, explore, or book unique spaces around the city for events and celebrations.";
     var aboutUsMessage2 = "Whether it is your bachelors before marriage, anniversary party after marriage, or your kid’s birthday party, ClubInn helps you arrange all events and celebrations in just a few clicks. An economic empowerment engine that allows people to monetise their extra space, world-class arrangements done in a record timing of just 1 day, a growing community of users, all of this together is pushing ClubInn to become the next biggest events chain of the world.";
     var founders = [
-        {
+        /*{
             "name": 'Arsh Bansal',
             "position": "Co-founder"
         },
@@ -164,7 +203,7 @@ router.post('/aboutus', (req, res, next) => {
         {
             "name": 'Shivam Agarwal',
             "position": "Co-founder"
-        }
+        }*/
     ];
     res.status(200).json({
         message1: aboutUsMessage1,
