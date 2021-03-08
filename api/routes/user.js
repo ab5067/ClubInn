@@ -80,6 +80,16 @@ router.get('/homepage',(req, res, next) => {
             "review": "Spent such a memorable time with my friends at ClubInn! Thanks so much for an unforgettable night.",
             "critic": "Shiksha Verma",
             "criticImageLink": "critic_images/Shiksha_Verma.jpeg"
+        }, 
+        {
+            "review": "Really loved the entire set-up, place was beautifully set-up. Looking forward for more ClubInn.",
+            "critic": "Aditi Pal",
+            "criticImageLink": "critic_images/Aditi_Pal.jpeg"
+        },
+        {
+            "review": "Great initiative and wonderful service. I couldn't have planned my bachelor's better and thanks for making it memorable.",
+            "critic": "Umang Murarka",
+            "criticImageLink": "critic_images/Umang_Murarka.jpeg"
         }
     ];
 
